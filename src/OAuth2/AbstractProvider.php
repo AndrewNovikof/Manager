@@ -55,6 +55,21 @@ abstract class AbstractProvider extends BaseProvider implements ProviderInterfac
     }
 
     /**
+     * Get user by token if we received a token from another source
+     *
+     * @param $token
+     * @return \SocialiteProviders\Manager\OAuth2\User
+     */
+    public function userByToken($token)
+    {
+        $user = $this->mapUserToObject($this->getUserByToken($token));
+        if ($user instanceof User) {
+            $user->setAccessTokenResponseBody($this->credentialsResponseBody);
+        }
+        return $user->setToken($token);
+    }
+
+    /**
      * Get the access token from the token response body.
      *
      * @param string $body
